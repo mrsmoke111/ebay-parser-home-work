@@ -2,11 +2,60 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using HtmlAgilityPack;
+using Fizzler.Systems.HtmlAgilityPack;
 
 namespace eBayParser.Classes
 {
     public static class EBayItemParser
     {
+        public static string Parse(string url)
+        {
+            List<EBayItem> eBayItems = new List<EBayItem>();
 
+            var web = new HtmlWeb();
+            var pageDoc = web.Load(url);
+
+            //for each item on web page
+            foreach (var item in pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner li"))
+            {
+                EBayItem eBayItem = new EBayItem();
+
+                eBayItem.title = ParseTitle(item);
+                eBayItem.link = ParseLink(item);
+                eBayItem.price = ParsePrice(item);
+                eBayItem.quantity = ParseQuantity(eBayItem.link);
+
+                eBayItems.Add(eBayItem);
+            }
+
+            return "TODO";
+        }
+
+        private static string ParseTitle(HtmlNode doc)
+        {
+            var title = doc.QuerySelectorAll(".lvtitle a");
+            return title == null || title.Count() == 0 ? "" : title.First().InnerText;
+        }
+
+        private static string ParseLink(HtmlNode doc)
+        {
+            var link = doc.QuerySelectorAll(".lvtitle a");
+            return link == null || link.Count() == 0 ? "" : link.First().GetAttributeValue("href", "");
+        }
+
+        private static string ParsePrice(HtmlNode doc)
+        {
+            var price = doc.QuerySelectorAll(".lvprice > span");
+            return price== null || price.Count() == 0 ? "" : price.First().InnerText;
+        }
+
+        private static string ParseQuantity(string url)
+        {
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+            var qt = doc.DocumentNode.QuerySelectorAll("#qtySubTxt");
+            return qt == null || qt.Count() == 0 ? "" : qt.First().InnerText;
+        }
     }
 }
