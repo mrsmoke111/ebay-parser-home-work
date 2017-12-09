@@ -9,7 +9,7 @@ namespace eBayParser.Classes
     {
         public string title { get; set; }
         public string link { get; set; }
-        public int quantity { get; set; }
-        public Decimal price { get; set; }
+        public string quantity { get; set; }
+        public string price { get; set; }
     }
 }
