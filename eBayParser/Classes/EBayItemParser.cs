@@ -16,6 +16,8 @@ namespace eBayParser.Classes
             var web = new HtmlWeb();
             var pageDoc = web.Load(url);
 
+            var x = pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner > li").Count();
+
             //for each item on web page
             foreach (var item in pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner > li"))
             {
@@ -32,9 +34,10 @@ namespace eBayParser.Classes
             return eBayItems;
         }
 
+
         private static string ParseTitle(HtmlNode doc)
         {
-            var title = doc.QuerySelectorAll(".lvtitle a");
+            var title = doc.QuerySelectorAll("h3.lvtitle > a");
             return title == null || title.Count() == 0 ? "" : title.First().InnerText;
         }
 
