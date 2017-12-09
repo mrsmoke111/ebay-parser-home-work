@@ -9,7 +9,7 @@ namespace eBayParser.Classes
 {
     public static class EBayItemParser
     {
-        public static string Parse(string url)
+        public static List<EBayItem> Parse(string url)
         {
             List<EBayItem> eBayItems = new List<EBayItem>();
 
@@ -17,7 +17,7 @@ namespace eBayParser.Classes
             var pageDoc = web.Load(url);
 
             //for each item on web page
-            foreach (var item in pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner li"))
+            foreach (var item in pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner > li"))
             {
                 EBayItem eBayItem = new EBayItem();
 
@@ -29,7 +29,7 @@ namespace eBayParser.Classes
                 eBayItems.Add(eBayItem);
             }
 
-            return "TODO";
+            return eBayItems;
         }
 
         private static string ParseTitle(HtmlNode doc)
@@ -41,21 +41,22 @@ namespace eBayParser.Classes
         private static string ParseLink(HtmlNode doc)
         {
             var link = doc.QuerySelectorAll(".lvtitle a");
-            return link == null || link.Count() == 0 ? "" : link.First().GetAttributeValue("href", "");
+            return link == null || link.Count() == 0 ? "" : link.First().GetAttributeValue("href", "").Trim();
         }
 
         private static string ParsePrice(HtmlNode doc)
         {
             var price = doc.QuerySelectorAll(".lvprice > span");
-            return price== null || price.Count() == 0 ? "" : price.First().InnerText;
+            return price== null || price.Count() == 0 ? "" : price.First().InnerText.Trim();
         }
 
         private static string ParseQuantity(string url)
         {
+            if (string.IsNullOrEmpty(url)) return "";
             var web = new HtmlWeb();
             var doc = web.Load(url);
             var qt = doc.DocumentNode.QuerySelectorAll("#qtySubTxt");
-            return qt == null || qt.Count() == 0 ? "" : qt.First().InnerText;
+            return qt == null || qt.Count() == 0 ? "" : qt.First().InnerText.Trim();
         }
     }
 }

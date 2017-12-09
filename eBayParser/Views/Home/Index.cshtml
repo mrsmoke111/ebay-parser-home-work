@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<eBayParser.Classes.EBayItem>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -9,5 +10,12 @@
 </div>
 
 <div>
-    @Html.Raw(@ViewBag.test)
+    @foreach (var item in Model)
+    {
+    <br>
+        @item.title <br>
+        @item.price <br>
+        @item.link <br>
+        @item.quantity <br>
+    }
 </div>
