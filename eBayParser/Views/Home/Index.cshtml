@@ -2,20 +2,51 @@
 @{
     ViewBag.Title = "Home Page";
 }
+<br /> <br /> <br />
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
 
-<div>
-    @foreach (var item in Model)
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-6">
+            <form action="/Home/index" method="post">
+                <div class="form-group">
+                    <input type="text" name="url" placeholder="Enter link" />
+                    <input type="submit" value="submit" />
+                </div>
+            </form>
+        </div>
+        <br /> <br />
+    </div>
+
+
+    @if (Model == null || Model.Count == 0)
     {
-    <br>
-        @item.title <br>
-        @item.price <br>
-        @item.link <br>
-        @item.quantity <br>
+        <p>No records</p>
+    }
+
+    @if (Model != null && Model.Count>0)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table-striped">
+                    <tr>
+                        <th>Title</th>
+                        <th>Link</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.title</td>
+                            <td>@item.link</td>
+                            <td>@item.price</td>
+                            <td>@item.quantity</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
     }
 </div>
