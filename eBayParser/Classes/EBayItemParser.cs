@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using HtmlAgilityPack;
+using System.Net;
 using Fizzler.Systems.HtmlAgilityPack;
 
 namespace eBayParser.Classes
@@ -13,16 +14,15 @@ namespace eBayParser.Classes
         {
             List<EBayItem> eBayItems = new List<EBayItem>();
 
-            var web = new HtmlWeb();
-            var pageDoc = web.Load(url);
-
-            var x = pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner > li").Count();
+            WebClient client = new WebClient();
+            string content = client.DownloadString(url);
+            var pageDoc = new HtmlDocument();
+            pageDoc.LoadHtml(content);
 
             //for each item on web page
             foreach (var item in pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner > li"))
             {
                 EBayItem eBayItem = new EBayItem();
-
                 eBayItem.title = ParseTitle(item);
                 eBayItem.link = ParseLink(item);
                 eBayItem.price = ParsePrice(item);
