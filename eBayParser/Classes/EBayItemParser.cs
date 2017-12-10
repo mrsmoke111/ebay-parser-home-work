@@ -12,12 +12,24 @@ namespace eBayParser.Classes
     {
         public static List<EBayItem> Parse(string url)
         {
+            if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                 !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                url = "http://" + url;
+            }
+
             List<EBayItem> eBayItems = new List<EBayItem>();
 
-            WebClient client = new WebClient();
-            string content = client.DownloadString(url);
             var pageDoc = new HtmlDocument();
-            pageDoc.LoadHtml(content);
+            try
+            {
+                WebClient client = new WebClient();
+                string content = client.DownloadString(url);
+                pageDoc.LoadHtml(content);
+            } catch
+            {
+                return new List<EBayItem>();
+            }
 
             //for each item on web page
             foreach (var item in pageDoc.DocumentNode.QuerySelectorAll("#ListViewInner > li"))
